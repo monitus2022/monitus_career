@@ -34,6 +34,19 @@ seniority_out_match: null
 """
 
 
+def test_enabled_sources_from_config():
+    """CLI default derives from config.yaml enabled flags (user decision
+    2026-11-02: hkgov OFF). Implicit KEYWORD_CONFIG reload via load path."""
+    from pipeline.run import enabled_sources, _load_keyword_config
+    _load_keyword_config()
+    assert enabled_sources() == ["jobsdb"]
+    # re-enabling hkgov restores canonical order
+    runmod.KEYWORD_CONFIG["sources"]["hkgov"]["enabled"] = True
+    assert enabled_sources() == ["hkgov", "jobsdb"]
+    runmod.KEYWORD_CONFIG["sources"] = {}
+    assert enabled_sources() == ["jobsdb"]  # never an empty run
+
+
 def test_double_run_idempotent(tmp_path):
     data, fixtures = _tmp_dirs(tmp_path)
     rr1, p1 = run_pipeline(["hkgov", "jobsdb"], data_dir=data,

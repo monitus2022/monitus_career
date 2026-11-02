@@ -318,11 +318,21 @@ def _upload(data_dir: Path) -> int:
     return 1
 
 
+def enabled_sources() -> list[str]:
+    """CLI --sources default: config.yaml ``sources.<name>.enabled``, in
+    canonical order. Explicit --sources always overrides."""
+    order = ["hkgov", "jobsdb", "ctgoodjobs", "recruit"]
+    cfg = KEYWORD_CONFIG.get("sources") or {}
+    on = [n for n in order if (cfg.get(n) or {}).get("enabled")]
+    return on or ["jobsdb"]  # never an empty run
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="HK Job Engine daily pipeline")
     ap.add_argument("--dry-run", action="store_true",
                     help="replay fixtures, no requests")
-    ap.add_argument("--sources", default="hkgov,jobsdb")
+    ap.add_argument("--sources", default=None, metavar="N1,N2",
+                    help="default: enabled sources from pipeline/config.yaml")
     ap.add_argument("--upload", action="store_true",
                     help="upload to R2 (needs H3 creds)")
     ap.add_argument("--data-dir", default=None)
@@ -333,8 +343,12 @@ def main(argv: list[str] | None = None) -> int:
         level=logging.INFO,
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
+    _load_keyword_config()
     data_dir = Path(args.data_dir) if args.data_dir else LOCAL_DATA_DIR
-    sources = [s.strip() for s in args.sources.split(",") if s.strip()]
+    if args.sources:
+        sources = [s.strip() for s in args.sources.split(",") if s.strip()]
+    else:
+        sources = enabled_sources()
 
     # Invariant 3 — total request budget; trip *before* exceeding
     if not args.dry_run and len(sources) * PER_SOURCE_CAP > TOTAL_CAP:

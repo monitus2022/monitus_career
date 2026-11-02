@@ -50,6 +50,7 @@ file (checkboxes, notes, deviations from the design doc).
 | E4 | done | `site/`: index.html, app.js (tier grouping/sorting/filters, star/interested/applied/irrelevant/notes, staleness banner, escaping), style.css, `_headers` (noindex+CSP), robots.txt (disallow) |
 | E5 | done | Pages app live at `career.monitus.org` (git- or dashboard-deployed by the human). Access gating NOT yet observed on `GET /` — see BLOCKERS B-7 |
 | F1 | open | feature-flagged OFF (no LLM by default — invariant) |
+| sources | done | **hkgov disabled in `config.yaml`** (user decision 2026-11-02: listing quality too low for the profile; 0 cross-source clusters). jobsdb-only minimal. P7 probe recommends eFinancialCareers as the future 2nd source (plain HTTP + embedded JSON payload) — **deferred** per user choice |
 | F2 | open | OFF (same invariant) |
 | F3 | open | OFF |
 | F4 | open | OFF |

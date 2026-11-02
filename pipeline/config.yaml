@@ -2,14 +2,17 @@
 # Rolled out per §7: ctgoodjobs/recruit stay OFF until 2 consecutive green runs.
 sources:
   hkgov:
-    enabled: true
+    enabled: false       # user decision 2026-11-02: gov listing quality too
+                         # low (≈50 % guards/cleaners, <$20k) for a python/
+                         # eng profile; zero cross-source clusters with jobsdb.
+                         # Re-enable by flipping to true (adapter kept, tested).
     list_paths:
       - /jobseeker/jobsearch/quickview/fulltime_epem/
       - /jobseeker/jobsearch/quickview/fulltime_na/
     pages: 1
   jobsdb:
     enabled: true
-    keyword: ""          # empty = broad; scoped by pageSize/page only
+    keyword: ""          # overridden at run time by the profile recall hook
     pages: 1
   ctgoodjobs:
     enabled: false       # F4: ON after 2 consecutive green 4-source runs
