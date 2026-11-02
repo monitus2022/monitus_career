@@ -94,6 +94,15 @@ def run_pipeline(
     profile_path: Path | None = None,
 ) -> tuple[RunReport, list[dict]]:
     _load_keyword_config()
+    _early_profile = load_profile(profile_path or Path("profile.yaml"))
+    if _early_profile.get("must_have"):
+        # recall hook (§6.8): scope the source keyword search to the profile's
+        # must-have keywords (jobsdb treats space-separated terms as AND).
+        KEYWORD_CONFIG["jobsdb"] = " ".join(_early_profile["must_have"])
+    elif _early_profile.get("nice_to_have"):
+        # no must-haves → recall still benefits from the nice keywords
+        KEYWORD_CONFIG["jobsdb"] = " ".join(_early_profile["nice_to_have"])
+    # else: fall back to the broad keyword from config.yaml
     rep_dir = data_dir / "reports"
     data_dir.mkdir(parents=True, exist_ok=True)
     rr = RunReport(run_id=now_hk().replace("+08:00", "+0800"),
@@ -285,18 +294,28 @@ def _compute_staleness(rep_dir: Path) -> int | None:
 
 
 def _upload(data_dir: Path) -> int:
-    """Upload via wrangler (H3 only). Requires CF_ACCOUNT_ID/CF_API_TOKEN."""
+    """Upload jobs.json via the R2 REST API (H3 creds in environment)."""
     import os
-    import subprocess
-    if not (os.environ.get("CF_ACCOUNT_ID") and os.environ.get("CF_API_TOKEN")):
+
+    import requests
+    acct = os.environ.get("CF_ACCOUNT_ID")
+    tok = os.environ.get("CF_API_TOKEN")
+    if not (acct and tok):
         log.warning("upload skipped: CF_ACCOUNT_ID/CF_API_TOKEN not set (H3)")
-        return 0
+        return 2
     bucket = os.environ.get("R2_BUCKET", "monitus-career-data")
-    cmd = [
-        "wrangler", "r2", "object", "put", f"{bucket}/jobs.json",
-        f"--file={data_dir / 'jobs.json'}", "--remote",
-    ]
-    return subprocess.call(cmd)
+    url = (f"https://api.cloudflare.com/client/v4/accounts/{acct}"
+           f"/r2/buckets/{bucket}/objects/jobs.json")
+    body = (data_dir / "jobs.json").read_bytes()
+    resp = requests.put(
+        url, headers={"Authorization": f"Bearer {tok}",
+                      "Content-Type": "application/json"},
+        data=body, timeout=60)
+    if resp.status_code // 100 == 2:
+        log.info("uploaded jobs.json → R2 %s (%d B)", bucket, len(body))
+        return 0
+    log.error("R2 upload failed: %d %s", resp.status_code, resp.text[:300])
+    return 1
 
 
 def main(argv: list[str] | None = None) -> int:

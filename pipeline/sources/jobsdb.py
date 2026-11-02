@@ -66,6 +66,10 @@ def _parse_card(card) -> Job:
     sal_raw = clean_text(sal_el.get_text(" ", strip=True)) if sal_el else None
     smin, smax, speriod = parse_salary(sal_raw)
 
+    # one-line synopsis — TRANSIENT scoring evidence only (see schema.py)
+    desc_el = _auto(card, "jobShortDescription")
+    short_desc = clean_text(desc_el.get_text(" ", strip=True)) if desc_el else None
+
     date_el = _auto(card, "jobListingDate")
     posted_raw = clean_text(date_el.get_text(" ", strip=True)) if date_el else None
     # SSR shows relative dates ("Today", "2d ago"); ISO only when absolute
@@ -93,6 +97,7 @@ def _parse_card(card) -> Job:
         posted_date_raw=posted_raw,
         posted_date=posted_date,
         url=url,
+        short_desc=short_desc,
     ).compute_hashes()
 
 

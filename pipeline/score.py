@@ -75,10 +75,22 @@ def score(job: Job, profile: dict) -> tuple[int, list[str], str | None]:
         if keyword_hit(job, kw, ("title",)):
             score += 3
             reasons.append(f"must:{kw}")
+        elif keyword_hit(job, kw, ("short_desc",)):
+            # weaker evidence: synopsis mentions the keyword but the title
+            # doesn't (build-plan deviation, logged in PROGRESS.md — +2)
+            score += 2
+            reasons.append(f"must:desc:{kw}")
     for kw in profile["nice_to_have"]:
-        if keyword_hit(job, kw, ("title", "company")):
+        if keyword_hit(job, kw, ("title",)):
             score += 1
             reasons.append(f"nice:{kw}")
+        elif keyword_hit(job, kw, ("company",)):
+            score += 1
+            reasons.append(f"nice:{kw}")
+        elif keyword_hit(job, kw, ("short_desc",)):
+            # synopsis hit: same +1 weight (nice is already weak evidence)
+            score += 1
+            reasons.append(f"nice:desc:{kw}")
     # exclude hits on *published* fields, never full ad copy (privacy)
     for kw in profile["exclude"]:
         if keyword_hit(job, kw, ("title", "company")):

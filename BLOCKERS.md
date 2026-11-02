@@ -47,3 +47,21 @@ Playwright image stays available for future JS-only surfaces.
 Human reviewed `docs/h1-sample-records.md` and approved ("lgtm"). The first
 real live run followed: 70 records (hkgov 40 + jobsdb 30), 3 HTTP requests,
 0 contract failures. Adapters confirmed on live data.
+
+## B-7 — Access gating not yet observed (H3 follow-up)
+`GET https://career.monitus.org` and `GET /api/jobs` return 200 without an
+Access challenge — no Cloudflare Access application protects the domain (or
+its policy currently bypasses anonymous visitors). The site still carries
+noindex/nofollow + robots disallow; risk is limited to strangers seeing the
+job list + being able to POST user-state junk. Remedy: create a Zero Trust
+Access app for `career.monitus.org/*` (+ the pages.dev host), policy allow
+owner email only. Then re-verify: anonymous `curl -I` should yield 302 →
+`<team>.cloudflarersaccess.com` style login.
+
+## B-8 — R2 upload creds missing from `.env` (H3 tail)
+Bucket, Pages, binding, domain all verified live — the only missing piece is
+the API token inside `.env` (`CF_ACCOUNT_ID`, `CF_API_TOKEN`,
+`R2_BUCKET=monitus-career-data`). Upload path is now a plain REST PUT from
+the pipeline (no wrangler needed). Once `.env` is filled:
+`PYTHONPATH=. .venv/bin/python -m pipeline.run --dry-run --upload` fills the
+site instantly (replays today's captures, no new HTTP requests).

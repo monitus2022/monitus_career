@@ -118,6 +118,58 @@ def test_rank_never_filters():
     assert ranked[0].tier == "C"
 
 
+def test_must_desc_hit_weaker_evidence():
+    """Synopsis mentions must-have but title doesn't → +2 not +3 (deviation
+    logged in PROGRESS.md: desc evidence is weaker than title evidence)."""
+    j = mk("Platform Engineer", smin=32000, districts=["Kowloon City"],
+           region="Kowloon City")
+    j.short_desc = "Comfortable with python; some SQL"
+    s, reasons, tier = score(j, PROFILE)
+    # 2(desc) + 2(floor) + 1(district) = 5 → B (would be C with no hit)
+    assert s == 5 and tier == "B"
+    assert "must:desc:python" in reasons and "must:python" not in reasons
+
+    # title hit outranks desc hit for the same keyword (exclusive, not both)
+    t = mk("Python Developer", smin=32000, districts=["Kowloon City"],
+           region="Kowloon City")
+    t.short_desc = "python-heavy stack"
+    s2, r2, _ = score(t, PROFILE)
+    assert s2 == 3 + 2 + 1  # must via title only
+    assert "must:python" in r2 and "must:desc:python" not in r2
+
+    # regex keywords also hit the synopsis
+    rx_profile = dict(PROFILE)
+    rx_profile["must_have"] = ["regex:(?i)\\bllm\\b"]
+    r = mk("Data Engineer", smin=32000, districts=["Kowloon City"],
+           region="Kowloon City")
+    r.short_desc = "Experience with LLM pipelines a plus"
+    s3, r3, _ = score(r, rx_profile)
+    assert s3 == 2 + 2 + 1 and any(x.startswith("must:desc:") for x in r3)
+
+
+def test_short_desc_never_serialized(tmp_path):
+    """Privacy invariant: the synopsis is scoring evidence only — it must not
+    reach jobs.json (to_dict) nor shift content_hash."""
+    from pipeline.schema import content_hash
+
+    a = mk("Data Engineer", smin=32000)
+    b = mk("Data Engineer", smin=32000)
+    b.short_desc = "python, sql, aws"
+    assert "short_desc" not in a.to_dict()
+    assert a.content_hash == b.content_hash  # hash ignores desc
+
+    # and the live adapter assigns it from the card
+    from pipeline.sources import jobsdb
+    raw = (tmp_path / "x.html")
+    raw.write_text((  # minimal single-card page
+        '<div data-automation="normalJob">'
+        '<a href="/job/777" data-automation="jobTitle">Qa Analyst</a>'
+        '<span data-automation="jobShortDescription">python+cypress</span>'
+        "</div>"), encoding="utf-8")
+    jobs, dropped = jobsdb.parse(raw.read_text(encoding="utf-8"))
+    assert dropped == 0 and jobs[0].short_desc == "python+cypress"
+
+
 def test_no_profile_no_ranking():
     j = [mk("Anything", company="X")]
     ranked = apply_ranking(j, {})

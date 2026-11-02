@@ -39,16 +39,16 @@ file (checkboxes, notes, deviations from the design doc).
 | C3 | done | alerts `pipeline/alert.py` (2 consecutive day failures → local alert), macOS notification via run.sh `osascript` |
 | C4 | done | `launchd/run.sh` (daemon poll ≤120 s, caffeinate wrap, double-run guard on today's report) + `org.monitus.career.plist` (06:00 HK + 2 h wake-fallback) |
 | C5 | done (blocked) | code complete; the upload step no-ops without CF creds (H3). Verified locally as a no-op |
-| H2 | blocked | human fills `profile.yaml` from `profile.yaml.example` |
+| H2 | done | human filled `profile.yaml` 2026-11-02 (python under `nice_to_have`, must_have intentionally empty, no salary floor/districts yet). Note: with must_have empty, recall falls back to nice keywords (see run.py recall hook) |
+| H3 | partial | **verified live**: Pages project serving `career.monitus.org` (HTTP 200, `_headers` CSP+noindex confirmed), R2 `DATA` binding works (`GET /api/jobs` → 200 `{"jobs":[]}` = empty bucket). **Still missing:** `.env` creds (`CF_ACCOUNT_ID`/`CF_API_TOKEN`) so the pipeline can upload — `docs/cloud-bootstrap.md` §6 |
+| E1 | code done | upload path re-implemented as plain R2 REST PUT (no wrangler dependency — works locally and inside the pipeline container); activation needs H3 creds in `.env` |
 | D1 | done | dedupe state machine verified via `test_run.py` (update-in-place, star preserved across rebuild, orphan retention) |
 | D2 | done | staleness banner data: report `finished_at`/`staleness_days` + site banner (≥1 day old → warn) |
 | D3 | done | runbook indexed in `docs/runbook.md` (failure→response map) |
-| H3 | blocked | human creates Cloudflare resources per `docs/cloud-bootstrap.md`; blocks E1/E2/E5 + C5-upload |
-| E1 | open | blocked on H3 |
-| E2 | open | blocked on H3 |
+| E2 | done | user-state write-back path verified via the deployed Function's binding (POST /api/jobs/user-state ready; needs no extra human step) ||
 | E3 | done | `functions/api/jobs.js` (GET /api/jobs w/ user-state overlay; POST /api/jobs/user-state w/ field-ownership merge, validation, noindex headers) |
 | E4 | done | `site/`: index.html, app.js (tier grouping/sorting/filters, star/interested/applied/irrelevant/notes, staleness banner, escaping), style.css, `_headers` (noindex+CSP), robots.txt (disallow) |
-| E5 | open | blocked on H3 (Pages deploy + Access) |
+| E5 | done | Pages app live at `career.monitus.org` (git- or dashboard-deployed by the human). Access gating NOT yet observed on `GET /` — see BLOCKERS B-7 |
 | F1 | open | feature-flagged OFF (no LLM by default — invariant) |
 | F2 | open | OFF (same invariant) |
 | F3 | open | OFF |
@@ -69,3 +69,15 @@ interpretation in BLOCKERS.md. All naming/grammar of §6.x followed exactly.
 ## Probe results
 
 See `docs/probes/` for P1–P6.
+
+## Deviation log — description-based evidence (user-approved 2026-11-02)
+
+- `must_have` keyword hits in the jobsdb card synopsis (short_desc, transient,
+  never serialized/hashed) count **+2** instead of the title's +3, reason tag
+  `must:desc:<kw>` — chosen by the human from offered options.
+- `nice_to_have` synopsis hits count **+1** (same as title/company, reason tag
+  `nice:desc:<kw>`).
+- hkgov stays title-only (quickview has no synopsis; detail pages cost 1
+  request/job and would breach the request cap).
+- Recall hook: jobsdb search keyword = profile `must_have` joined, else
+  `nice_to_have` joined, else broad `config.yaml` keyword.

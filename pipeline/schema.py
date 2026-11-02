@@ -115,6 +115,12 @@ class Job:
     posted_date: Optional[str] = None  # ISO date, Asia/Hong_Kong
     url: Optional[str] = None
 
+    # -- transient scoring evidence (NEVER serialized, NEVER hashed) ----
+    # Source card synopsis (jobsdb jobShortDescription). Used by score.py
+    # only; deliberately absent from to_dict() and content_hash (§6 privacy:
+    # full ad copy is stored/served anywhere but published-card fields).
+    short_desc: Optional[str] = None
+
     # -- pipeline-computed ---------------------------------------------
     content_hash: str = ""
     dedupe_key: str = ""
@@ -143,6 +149,8 @@ class Job:
             raise ContractViolation("source_job_id must be non-empty")
         self.company = clean_text(self.company)
         self.salary_raw = clean_text(self.salary_raw)
+        if self.short_desc is not None:
+            self.short_desc = clean_text(self.short_desc)
         self.locations_raw = [clean_text(x) or x for x in (self.locations_raw or [])]
         self.locations_raw = [x for x in self.locations_raw if x]
         self.posted_date_raw = clean_text(self.posted_date_raw)
