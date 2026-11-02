@@ -1,0 +1,26 @@
+# pipeline/config.yaml — per-source settings for the daily run.
+# Rolled out per §7: ctgoodjobs/recruit stay OFF until 2 consecutive green runs.
+sources:
+  hkgov:
+    enabled: true
+    list_paths:
+      - /jobseeker/jobsearch/quickview/fulltime_epem/
+      - /jobseeker/jobsearch/quickview/fulltime_na/
+    pages: 1
+  jobsdb:
+    enabled: true
+    keyword: ""          # empty = broad; scoped by pageSize/page only
+    pages: 1
+  ctgoodjobs:
+    enabled: false       # F4: ON after 2 consecutive green 4-source runs
+  recruit:
+    enabled: false       # F4: same
+
+alerts:
+  consecutive_source_failure_days: 2
+  systemic_contract_failure_rate: 0.05
+  coverage_drop_pp: 30.0
+
+retention:
+  seen_days: 90          # §6.6 purge rule
+  raw_days: 90           # raw/<date>/<source>/ purge (E2)

@@ -1,0 +1,16 @@
+services:
+  pipeline:
+    build: .
+    image: monitus-career-pipeline
+    container_name: monitus-career-pipeline
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # captured fixtures (untracked payloads) + runs/ state survive restarts
+      - ./fixtures:/app/fixtures
+      - ./runs:/app/runs
+      - ./profile.yaml:/app/profile.yaml:ro
+    network_mode: bridge

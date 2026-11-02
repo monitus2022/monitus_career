@@ -1,0 +1,29 @@
+# secrets & environment
+.env
+profile.yaml
+
+# scraped data — NEVER commit (fixtures/ holds only fixtures/synthetic/, which is tracked)
+fixtures/*
+!fixtures/synthetic/
+!fixtures/README.md
+runs/
+reports/
+
+# local state
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.claude/
+*.log
+
+# OS
+.DS_Store
+
+# node (site functions use wrangler at deploy time only)
+node_modules/
+.wrangler/
+
+# generated run state / test-run output (never commit: contains jobs.json)
+runs/
+runs_*/

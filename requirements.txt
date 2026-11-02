@@ -1,0 +1,6 @@
+# requirements.txt — pipeline
+requests>=2.31
+PyYAML>=6.0
+beautifulsoup4>=4.12
+lxml>=4.9
+pytest>=8.0

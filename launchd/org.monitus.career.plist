@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>org.monitus.career.pipeline</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/bin/zsh</string>
+        <string>/Users/tc/Documents/Github/monitus_career/launchd/run.sh</string>
+    </array>
+
+    <!-- P4: daily 06:00 Asia/Hong_Kong; wake-catch-up semantics documented in
+         docs/probes/P4-launchd-wake.md. Once P4 proves missed-run-then-wake
+         fires, the StartInterval fallback below can be trimmed. -->
+    <key>StartCalendarInterval</key>
+    <array>
+        <dict>
+            <key>Hour</key><integer>6</integer>
+            <key>Minute</key><integer>0</integer>
+        </dict>
+    </array>
+
+    <!-- wake-server fallback: re-fire every 2h in case the 06:00 run was
+         missed while asleep (run.sh short-circuits double-running via the
+         report's date file; harmless no-op when the day's run already
+         succeeded) -->
+    <key>StartInterval</key>
+    <integer>7200</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/tc/Documents/Github/monitus_career/runs/launchd.out</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/tc/Documents/Github/monitus_career/runs/launchd.err</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>HK Job Engine</title>
+<link rel="stylesheet" href="style.css">
+<!-- X-Robots-Tag noindex is also set via site/_headers (belt & braces) -->
+<meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+  <header>
+    <h1>HK Job Engine</h1>
+    <div id="banner" hidden>data age</div>
+    <label>Minimum tier-match score:
+      <input id="minScore" type="number" min="0" max="12" value="0">
+    </label>
+    <label>Sort:
+      <select id="sortBy">
+        <option value="tier" selected>tier → score</option>
+        <option value="score_new">score</option>
+        <option value="new">newest first</option>
+      </select>
+    </label>
+  </header>
+  <main id="list"></main>
+  <script src="app.js"></script>
+</body>
+</html>

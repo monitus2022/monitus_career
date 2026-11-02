@@ -1,0 +1,5 @@
+# site/_headers — X-Robots-Tag noindex on all routes (invariant: private site)
+/*
+  X-Robots-Tag: noindex, nofollow
+  Referrer-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline'; script-src 'self'

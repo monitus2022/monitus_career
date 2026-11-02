@@ -1,0 +1,37 @@
+# profile.yaml.example — copy to profile.yaml and fill at checkpoint H2.
+# All matching is deterministic (no LLM). See build plan §6.8.
+#
+# keyword lists: lowercase strings; matching is case-insensitive substring
+# against title (and keywords also against the posting's other published fields
+# only where noted below). Regex strings allowed with the `regex:` prefix.
+
+# REQUIRED: list of human-readable MUST keywords
+must_have:
+  # - python
+  # - backend
+
+# list of NICE keywords
+nice_to_have:
+  # - docker
+  # - aws
+
+# any hit here = deal-breaker (posting stays visible, tier C / demoted)
+exclude:
+  # - sales
+  # - cold call
+
+# monthly-equivalent minimum in HKD; postings below it are deal-breakers.
+# If null, no salary floor is applied.
+salary_floor_month: null   # e.g. 30000
+
+# preferred districts — exact district names from the 18-district list, e.g.
+# districts:
+#   - Kowloon City
+#   - Yau Tsim Mong
+# anywhere_in_hk: true      # treat "anywhere in HK" postings as in-preferred
+districts: []
+
+# seniority regex — postings whose seniority falls outside this pass are
+# deal-breakers. Matched against the title. Empty/null = no band check.
+seniority: null            # e.g. "regex:(?i)\b(senior|lead|principal)\b"
+seniority_out_match: null  # e.g. "regex:(?i)\b(intern|graduate)\b"

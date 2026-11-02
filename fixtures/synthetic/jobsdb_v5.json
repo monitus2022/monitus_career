@@ -1,0 +1,95 @@
+{
+  "_comment": "fixtures/synthetic/jobsdb_v5.json — FABRICATED payload mirroring v5 structure (P6). Synthetic values only. Traps: cross-source-style duplicate pair (Zenari Labs Ltd, twice), AU geo row (silently skipped), missing id + missing title rows (contract violations), salaryLabel variants.",
+  "data": [
+    {
+      "id": "900000001",
+      "title": "Junior Software Developer",
+      "advertiser": {"id": "c1", "description": "Zenari Labs Ltd"},
+      "displayType": "standard",
+      "isFeatured": false,
+      "listingDate": "2026-10-31T09:43:51Z",
+      "listingDateDisplay": "1d ago",
+      "jobDetailUrl": "/en/job-detail/900000001",
+      "salaryLabel": "HK$30,000 - $38,000 /m",
+      "locations": [
+        {"label": "Kowloon Tong", "countryCode": "HK", "seoHierarchy": [{"contextualName": "Kowloon Tong"}]}
+      ],
+      "classifications": [{"classification": {"id": "6205", "description": "Information & Communication Technology"}, "subclassification": {"id": "6212", "description": "Programming & Development"}}]
+    },
+    {
+      "id": "900000002",
+      "title": "Junior Software Developer",
+      "advertiser": {"id": "c1b", "description": "Zenari Labs"},
+      "displayType": "standard",
+      "isFeatured": true,
+      "listingDate": "2026-10-30T02:11:07Z",
+      "listingDateDisplay": "2d ago",
+      "jobDetailUrl": "/en/job-detail/900000002",
+      "salaryLabel": "Negotiable",
+      "locations": [
+        {"label": "Kln. Tong", "countryCode": "HK", "seoHierarchy": [{"contextualName": "Kowloon Tong"}]}
+      ],
+      "classifications": []
+    },
+    {
+      "id": "900000003",
+      "title": "Care Delivery Lead",
+      "advertiser": {"id": "c2", "description": "Whitespace Books Limited"},
+      "displayType": "standard",
+      "isFeatured": false,
+      "listingDate": "2026-10-29T18:44:20Z",
+      "listingDateDisplay": "3d ago",
+      "jobDetailUrl": "/en/job-detail/900000003",
+      "salaryLabel": "HK$40,000 - $50,000 monthly",
+      "locations": [
+        {"label": "Sha Tin", "countryCode": "HK", "seoHierarchy": [{"contextualName": "Sha Tin"}]}
+      ],
+      "classifications": []
+    },
+    {
+      "id": "900000004",
+      "title": "Fancy Restaurant Waiter",
+      "advertiser": {"id": "c3", "description": "Bringcourier Express"},
+      "displayType": "standard",
+      "isFeatured": false,
+      "listingDate": "2026-10-28T01:00:00Z",
+      "listingDateDisplay": "4d ago",
+      "jobDetailUrl": "/en/job-detail/900000004",
+      "salaryLabel": "$95 per hour",
+      "locations": [
+        {"label": "Samford Valley, Brisbane QLD", "countryCode": "AU", "seoHierarchy": [{"contextualName": "Samford Valley QLD"}]}
+      ],
+      "classifications": []
+    },
+    {
+      "id": "900000005",
+      "title": "Day-rate Architect",
+      "advertiser": {"id": "c4", "description": "Fictional Atelier Limited"},
+      "displayType": "standard",
+      "isFeatured": false,
+      "listingDate": "2026-10-27T12:00:00Z",
+      "listingDateDisplay": "5d ago",
+      "jobDetailUrl": "/en/job-detail/900000005",
+      "salaryLabel": "$3,200 per day",
+      "locations": [
+        {"label": "Central", "countryCode": "HK", "seoHierarchy": [{"contextualName": "Central"}]}
+      ],
+      "classifications": []
+    },
+    {
+      "id": "900000006",
+      "title": "Working Hours Clerical Workers",
+      "advertiser": {"id": "c5", "description": "Nordia Services (HK) Company"},
+      "displayType": "standard",
+      "isFeatured": false,
+      "listingDate": "2026-10-26T00:00:00Z",
+      "listingDateDisplay": "6d ago",
+      "jobDetailUrl": "/en/job-detail/900000006",
+      "salaryLabel": "$590 per day",
+      "locations": [
+        {"label": "Tsim Sha Tsui", "countryCode": "HK", "seoHierarchy": [{"contextualName": "Tsim Sha Tsui"}]}
+      ],
+      "classifications": []
+    }
+  ]
+}

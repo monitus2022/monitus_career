@@ -1,0 +1,12 @@
+# wrangler.toml — Pages project `monitus-career` (build-plan §3 naming table)
+# Deploy: `wrangler pages deploy site` (E5 wires via GitHub Actions).
+name = "monitus-career"
+compatibility_date = "2026-11-01"
+pages_build_output_dir = "site"
+
+# Functions live in functions/ (Pages convention)
+# R2 binding: DATA → private bucket `monitus-career-data`
+# (no custom domain, no r2.dev access — See E1 checklist)
+[[r2_buckets]]
+binding = "DATA"
+bucket_name = "monitus-career-data"
