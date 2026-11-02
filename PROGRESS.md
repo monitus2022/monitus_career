@@ -33,7 +33,7 @@ file (checkboxes, notes, deviations from the design doc).
 | B4 | done | district normalization (alias handling incl. `, X District` suffixes), salary normalization incl. Neg/HK$‑free variants, month-equiv |
 | B5 | done | `pipeline/dedupe.py` (`dedupe_key` = company‖title‖district, cluster cross-source), `pipeline/state.py` (seen-set, user-state harvest incl. `last_seen_at` retention clock, 90-day purge) |
 | B6 | done | `pipeline/run.py` orchestrator: fetch→parse→dedupe→merge→report→(upload) + `--dry-run` (fixtures replay, zero HTTP, zero personal data) |
-| H1 | blocked | payload ready at **`docs/h1-sample-records.md`** — 20 real records from first live dry run + coverage table + full JSON. Waiting on the human eyeball pass |
+| H1 | done | **human approved 2026-11-02** ("lgtm"): 20 sample records reviewed via `docs/h1-sample-records.md`. Live run followed: 70 records (hkgov 40 + jobsdb 30), 3 HTTP requests, 0 contract failures, no personal fields |
 | C1 | done | `pipeline/score.py` (tier A/B/C rules on profile) — verified via synthetic; real runs omit `profile.yaml` (H2) so tiers stay null |
 | C2 | done | `pipeline/embed.py` (ollama `nomic-embed-text` 768-dim, local-only) — P5 verified; runs in live mode only |
 | C3 | done | alerts `pipeline/alert.py` (2 consecutive day failures → local alert), macOS notification via run.sh `osascript` |

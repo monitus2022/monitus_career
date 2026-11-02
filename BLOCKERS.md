@@ -43,10 +43,7 @@ Live capture (untracked): `fixtures/jobsdb_cards.html` (1 MB,
 30 rows parsed / 0 dropped). No browser needed at all; P2's Docker
 Playwright image stays available for future JS-only surfaces.
 
-## B-6 — H1 payload awaiting human review
-The 20 sample records + coverage table + full JSON are at
-**`docs/h1-sample-records.md`** (generated from the first live dry run,
-`runs_test/reports/2026-11-02.json`). Human: eyeball titles/districts/salary
-mappings; report anything wrong to the agent. Known *expected* nulls:
-hkgov company (anonymized) + posted_date (quickview has none);
-jobsdb salary on ~73 % of cards (employer-optional field).
+## B-6 — H1 payload review (RESOLVED 2026-11-02)
+Human reviewed `docs/h1-sample-records.md` and approved ("lgtm"). The first
+real live run followed: 70 records (hkgov 40 + jobsdb 30), 3 HTTP requests,
+0 contract failures. Adapters confirmed on live data.
